@@ -1,7 +1,17 @@
-// Clean Portfolio JavaScript - Enhanced and Mobile Responsive
+// Clean Portfolio JavaScript - Enhanced and Mobile Responsive with EmailJS
+
+// EmailJS Configuration
+const EMAILJS_CONFIG = {
+	publicKey: "mdzRPP7akUYbHOdEX",
+	serviceId: "service_li8j2er",
+	templateId: "template_o93q505",
+};
 
 // Wait for DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", function () {
+	// Initialize EmailJS
+	emailjs.init(EMAILJS_CONFIG.publicKey);
+
 	// Get navigation elements
 	const navigationLinks = document.querySelectorAll(".navigation-link");
 	const skillBars = document.querySelectorAll(".skill-progress");
@@ -273,57 +283,179 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
-	// Contact form handling with enhanced UX
+	// Enhanced contact form handling with EmailJS
 	function setupContactForm() {
 		const contactForm = document.querySelector(".message-form");
 		const submitButton = document.querySelector(".submit-button");
 
 		if (contactForm) {
-			contactForm.addEventListener("submit", function (e) {
+			contactForm.addEventListener("submit", async function (e) {
 				e.preventDefault();
 
 				// Get form data
 				const formData = new FormData(contactForm);
-				const name = formData.get("name");
-				const email = formData.get("email");
-				const message = formData.get("message");
+				const name = formData.get("name")?.trim();
+				const email = formData.get("email")?.trim();
+				const message = formData.get("message")?.trim();
 
-				// Simple validation
+				// Validate input
 				if (!name || !email || !message) {
-					alert("Please fill in all fields.");
+					showNotification("Please fill in all fields.", "error");
 					return;
 				}
 
-				// Simple email validation
+				// Email validation
 				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 				if (!emailRegex.test(email)) {
-					alert("Please enter a valid email address.");
+					showNotification(
+						"Please enter a valid email address.",
+						"error"
+					);
 					return;
 				}
 
-				// Show loading state if submit button exists
+				// Show loading state
 				if (submitButton) {
 					const originalText = submitButton.textContent;
 					submitButton.textContent = "Sending...";
 					submitButton.disabled = true;
+					submitButton.style.opacity = "0.7";
 
-					// Simulate form submission
-					setTimeout(() => {
-						alert(
-							"Thank you for your message! I will get back to you soon."
+					try {
+						// Format message for your template
+						const formattedMessage = `
+							Name: ${name}
+							Email: ${email}
+
+							Message:
+							${message}
+                        `;
+
+						// Prepare template parameters to match your template
+						const templateParams = {
+							message: formattedMessage, // This matches {{message}} in your template
+							from_name: name,
+							from_email: email,
+							to_name: "Dikshan Gurung",
+						};
+
+						// Send email via EmailJS
+						const response = await emailjs.send(
+							EMAILJS_CONFIG.serviceId,
+							EMAILJS_CONFIG.templateId,
+							templateParams
+						);
+
+						console.log("Email sent successfully:", response);
+						showNotification(
+							"Thank you! Your message has been sent successfully.",
+							"success"
 						);
 						contactForm.reset();
+					} catch (error) {
+						console.error("Error sending email:", error);
+						showNotification(
+							"Sorry, there was an error sending your message. Please try again later.",
+							"error"
+						);
+					} finally {
+						// Reset button state
 						submitButton.textContent = originalText;
 						submitButton.disabled = false;
-					}, 1000);
-				} else {
-					alert(
-						"Thank you for your message! I will get back to you soon."
-					);
-					contactForm.reset();
+						submitButton.style.opacity = "1";
+					}
 				}
 			});
 		}
+	}
+
+	// Notification system for better UX
+	function showNotification(message, type = "info") {
+		// Remove existing notifications
+		const existingNotification = document.querySelector(".notification");
+		if (existingNotification) {
+			existingNotification.remove();
+		}
+
+		// Create notification element
+		const notification = document.createElement("div");
+		notification.className = `notification notification-${type}`;
+		notification.textContent = message;
+
+		// Add styles
+		notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+            transform: translateX(0);
+            cursor: pointer;
+            ${type === "success" ? "background-color: #1ab394;" : ""}
+            ${type === "error" ? "background-color: #e74c3c;" : ""}
+            ${type === "info" ? "background-color: #3498db;" : ""}
+        `;
+
+		// Add animation keyframes if not already added
+		if (!document.querySelector("#notification-styles")) {
+			const style = document.createElement("style");
+			style.id = "notification-styles";
+			style.textContent = `
+                @keyframes slideIn {
+                    from { 
+                        transform: translateX(100%); 
+                        opacity: 0; 
+                    }
+                    to { 
+                        transform: translateX(0); 
+                        opacity: 1; 
+                    }
+                }
+                @keyframes slideOut {
+                    from { 
+                        transform: translateX(0); 
+                        opacity: 1; 
+                    }
+                    to { 
+                        transform: translateX(100%); 
+                        opacity: 0; 
+                    }
+                }
+                .notification:hover {
+                    transform: translateX(-5px);
+                }
+            `;
+			document.head.appendChild(style);
+		}
+
+		// Add to page
+		document.body.appendChild(notification);
+
+		// Auto remove after 5 seconds
+		setTimeout(() => {
+			notification.style.animation = "slideOut 0.3s ease forwards";
+			setTimeout(() => {
+				if (notification.parentNode) {
+					notification.parentNode.removeChild(notification);
+				}
+			}, 300);
+		}, 5000);
+
+		// Click to dismiss
+		notification.addEventListener("click", () => {
+			notification.style.animation = "slideOut 0.3s ease forwards";
+			setTimeout(() => {
+				if (notification.parentNode) {
+					notification.parentNode.removeChild(notification);
+				}
+			}, 300);
+		});
 	}
 
 	// Add loading state to buttons
@@ -386,9 +518,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Enhanced initialization function
 	function init() {
 		setupSmoothScrolling();
-		setupMobileNavigation(); // New
-		setupTouchAnimations(); // New
-		setupResizeHandler(); // New
+		setupMobileNavigation();
+		setupTouchAnimations();
+		setupResizeHandler();
 		setupSkillBarAnimation();
 		setupScrollAnimations();
 		setupContactForm();
@@ -401,7 +533,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Initial call to set correct active navigation
 		updateActiveNavigation();
 
-		console.log("Responsive Portfolio initialized successfully!");
+		console.log(
+			"Responsive Portfolio with EmailJS initialized successfully!"
+		);
 	}
 
 	// Start everything
