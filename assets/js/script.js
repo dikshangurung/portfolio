@@ -1,4 +1,4 @@
-// Clean Portfolio JavaScript - Enhanced and Optimized
+// Clean Portfolio JavaScript - Enhanced and Mobile Responsive
 
 // Wait for DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -6,7 +6,97 @@ document.addEventListener("DOMContentLoaded", function () {
 	const navigationLinks = document.querySelectorAll(".navigation-link");
 	const skillBars = document.querySelectorAll(".skill-progress");
 
-	// Smooth scrolling for navigation links
+	// Responsive Utilities
+	const ResponsiveUtils = {
+		isMobile: () => window.innerWidth <= 768,
+		isTablet: () => window.innerWidth > 768 && window.innerWidth <= 1024,
+		isTouch: () => "ontouchstart" in window || navigator.maxTouchPoints > 0,
+
+		// Debounce function for resize events
+		debounce: function (func, wait) {
+			let timeout;
+			return function executedFunction(...args) {
+				const later = () => {
+					clearTimeout(timeout);
+					func(...args);
+				};
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+			};
+		},
+	};
+
+	// Mobile Navigation Handler
+	function setupMobileNavigation() {
+		// Create mobile elements if they don't exist
+		let mobileToggle = document.querySelector(".mobile-nav-toggle");
+		let mobileOverlay = document.querySelector(".mobile-nav-overlay");
+
+		if (!mobileToggle) {
+			mobileToggle = document.createElement("button");
+			mobileToggle.className = "mobile-nav-toggle";
+			mobileToggle.innerHTML = `
+                <div class="hamburger-lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+			document.body.appendChild(mobileToggle);
+		}
+
+		if (!mobileOverlay) {
+			mobileOverlay = document.createElement("div");
+			mobileOverlay.className = "mobile-nav-overlay";
+			document.body.appendChild(mobileOverlay);
+		}
+
+		const sideNav = document.querySelector(".side-navigation");
+		const navLinks = document.querySelectorAll(".navigation-link");
+
+		// Toggle mobile navigation
+		mobileToggle.addEventListener("click", function () {
+			this.classList.toggle("active");
+			sideNav.classList.toggle("mobile-open");
+			mobileOverlay.classList.toggle("active");
+			document.body.style.overflow = sideNav.classList.contains(
+				"mobile-open"
+			)
+				? "hidden"
+				: "";
+		});
+
+		// Close navigation when overlay is clicked
+		mobileOverlay.addEventListener("click", closeMobileNav);
+
+		// Close navigation when nav link is clicked (mobile only)
+		navLinks.forEach((link) => {
+			link.addEventListener("click", function () {
+				if (window.innerWidth <= 768) {
+					closeMobileNav();
+				}
+			});
+		});
+
+		function closeMobileNav() {
+			mobileToggle.classList.remove("active");
+			sideNav.classList.remove("mobile-open");
+			mobileOverlay.classList.remove("active");
+			document.body.style.overflow = "";
+		}
+
+		// Close on escape key
+		document.addEventListener("keydown", function (e) {
+			if (
+				e.key === "Escape" &&
+				sideNav.classList.contains("mobile-open")
+			) {
+				closeMobileNav();
+			}
+		});
+	}
+
+	// Enhanced smooth scrolling for navigation with mobile considerations
 	function setupSmoothScrolling() {
 		navigationLinks.forEach((link) => {
 			link.addEventListener("click", function (e) {
@@ -17,8 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
 				const targetSection = document.querySelector(targetId);
 
 				if (targetSection) {
-					// Calculate position with better offset
-					const headerOffset = 20;
+					// Different offsets for mobile vs desktop
+					const headerOffset = ResponsiveUtils.isMobile() ? 80 : 20;
 					const targetPosition =
 						targetSection.offsetTop - headerOffset;
 
@@ -41,10 +131,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		activeLink.classList.add("active");
 	}
 
-	// Update active navigation based on scroll position
+	// Enhanced active navigation update with mobile considerations
 	function updateActiveNavigation() {
 		const sections = document.querySelectorAll(".content-section");
-		const scrollPosition = window.scrollY + 150; // Better offset for detection
+		// Different offset for mobile vs desktop
+		const scrollOffset = ResponsiveUtils.isMobile() ? 100 : 150;
+		const scrollPosition = window.scrollY + scrollOffset;
 
 		let currentSection = "";
 
@@ -132,6 +224,26 @@ document.addEventListener("DOMContentLoaded", function () {
 			element.style.transform = "translateY(30px)";
 			element.style.transition = "opacity 0.6s ease, transform 0.6s ease";
 			scrollObserver.observe(element);
+		});
+	}
+
+	// Touch-friendly animations
+	function setupTouchAnimations() {
+		const cards = document.querySelectorAll(
+			".project-card, .skill-card, .achievement-card"
+		);
+
+		cards.forEach((card) => {
+			// Add touch feedback for mobile
+			if (ResponsiveUtils.isTouch()) {
+				card.addEventListener("touchstart", function () {
+					this.style.transform = "scale(0.98)";
+				});
+
+				card.addEventListener("touchend", function () {
+					this.style.transform = "";
+				});
+			}
 		});
 	}
 
@@ -231,6 +343,33 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
+	// Handle window resize events
+	function setupResizeHandler() {
+		const handleResize = ResponsiveUtils.debounce(() => {
+			// Close mobile nav if window is resized to desktop
+			if (window.innerWidth > 768) {
+				const sideNav = document.querySelector(".side-navigation");
+				const mobileToggle =
+					document.querySelector(".mobile-nav-toggle");
+				const mobileOverlay = document.querySelector(
+					".mobile-nav-overlay"
+				);
+
+				if (sideNav && sideNav.classList.contains("mobile-open")) {
+					sideNav.classList.remove("mobile-open");
+					mobileToggle?.classList.remove("active");
+					mobileOverlay?.classList.remove("active");
+					document.body.style.overflow = "";
+				}
+			}
+
+			// Recalculate active navigation
+			updateActiveNavigation();
+		}, 250);
+
+		window.addEventListener("resize", handleResize);
+	}
+
 	// Throttle scroll events for better performance
 	function throttle(func, wait) {
 		let timeout;
@@ -244,27 +383,25 @@ document.addEventListener("DOMContentLoaded", function () {
 		};
 	}
 
-	// Initialize all functionality
+	// Enhanced initialization function
 	function init() {
 		setupSmoothScrolling();
+		setupMobileNavigation(); // New
+		setupTouchAnimations(); // New
+		setupResizeHandler(); // New
 		setupSkillBarAnimation();
 		setupScrollAnimations();
 		setupContactForm();
 		setupPageTransitions();
+		setupButtonEffects();
 
 		// Set up scroll listener with throttling
 		window.addEventListener("scroll", handleScroll);
 
-		// Handle window resize
-		window.addEventListener("resize", function () {
-			// Update any calculations that depend on window size
-			updateActiveNavigation();
-		});
-
 		// Initial call to set correct active navigation
 		updateActiveNavigation();
 
-		console.log("Portfolio initialized successfully!");
+		console.log("Responsive Portfolio initialized successfully!");
 	}
 
 	// Start everything
@@ -324,17 +461,38 @@ function addFadeInAnimations() {
 // Initialize fade-in animations when page loads
 window.addEventListener("load", addFadeInAnimations);
 
-// Certificate Modal Functions
+// Enhanced certificate modal with mobile support
 function openCertificateModal(imageSrc, altText) {
 	const modal = document.getElementById("certificateModal");
 	const modalImage = document.getElementById("modalCertificateImage");
 
-	modalImage.src = imageSrc;
-	modalImage.alt = altText;
-	modal.style.display = "block";
+	if (modal && modalImage) {
+		modalImage.src = imageSrc;
+		modalImage.alt = altText;
+		modal.style.display = "block";
 
-	// Prevent body scroll when modal is open
-	document.body.style.overflow = "hidden";
+		// Prevent body scroll and handle mobile viewport
+		document.body.style.overflow = "hidden";
+
+		// Add touch handling for mobile swipe to close
+		if ("ontouchstart" in window) {
+			let startY = 0;
+
+			modal.addEventListener("touchstart", function (e) {
+				startY = e.touches[0].clientY;
+			});
+
+			modal.addEventListener("touchmove", function (e) {
+				const currentY = e.touches[0].clientY;
+				const diff = startY - currentY;
+
+				// Swipe down to close
+				if (diff < -100) {
+					closeCertificateModal();
+				}
+			});
+		}
+	}
 }
 
 function closeCertificateModal() {
@@ -345,7 +503,7 @@ function closeCertificateModal() {
 	document.body.style.overflow = "auto";
 }
 
-// Close modal when clicking outside the image
+// Close modal when clicking outside the image and enhanced mobile support
 document.addEventListener("DOMContentLoaded", function () {
 	const modal = document.getElementById("certificateModal");
 	if (modal) {
