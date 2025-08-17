@@ -11,6 +11,7 @@
 		<nav class="navbar">
 			<div class="nav-container">
 				<div class="nav-logo">
+					<img src="Logo.png" alt="Yatra Logo" class="logo-img" />
 					<h2>Yatra</h2>
 				</div>
 				<ul class="nav-links">
@@ -19,6 +20,9 @@
 					<li><a href="#gallery" class="nav-link">Gallery</a></li>
 					<li>
 						<a href="#technology" class="nav-link">Technology</a>
+					</li>
+					<li>
+						<a href="#working" class="nav-link">How it Works</a>
 					</li>
 					<li>
 						<a href="../../index.html" class="nav-link"
@@ -42,8 +46,11 @@
 						experiences.
 					</p>
 					<div class="hero-buttons">
-						<a href="#gallery" class="btn-primary"
-							>View Screenshots</a
+						<a
+							href="https://yatra-frontend-three.vercel.app/"
+							target="_blank"
+							class="btn-primary"
+							>View Live Project</a
 						>
 						<a href="#features" class="btn-secondary"
 							>Explore Features</a
@@ -51,7 +58,16 @@
 					</div>
 				</div>
 				<div class="hero-image">
-					<img src="Yatra-home.png" alt="Yatra Travel Platform" />
+					<a
+						href="https://yatra-frontend-three.vercel.app/"
+						target="_blank"
+					>
+						<img
+							src="Yatra-home.png"
+							alt="Yatra Travel Platform"
+							class="clickable-image"
+						/>
+					</a>
 				</div>
 			</div>
 		</section>
@@ -59,7 +75,10 @@
 		<!-- Overview Section -->
 		<section id="overview" class="overview">
 			<div class="container">
-				<h2 class="section-title">Project Overview</h2>
+				<h2 class="section-title">
+					<img src="Logo.png" alt="Yatra Logo" class="section-logo" />
+					Project Overview
+				</h2>
 				<div class="overview-grid">
 					<div class="overview-card">
 						<h3>Purpose</h3>
@@ -149,12 +168,13 @@
 						</p>
 					</div>
 					<div class="feature-item">
-						<div class="feature-icon">📱</div>
-						<h3>Mobile Responsive</h3>
+						<div class="feature-icon">📊</div>
+						<h3>Interactive Flowchart</h3>
 						<p>
-							Fully responsive design ensuring seamless access to
-							travel plans and features across all devices and
-							screen sizes.
+							Visual flowchart displays detailed trip plans for
+							all group members, showing day-by-day activities and
+							coordinated schedules in an easy-to-understand
+							format.
 						</p>
 					</div>
 				</div>
@@ -167,48 +187,86 @@
 				<h2 class="section-title">Platform Gallery</h2>
 				<div class="gallery-grid">
 					<div class="gallery-item">
-						<img src="Yatra-home.png" alt="Yatra Homepage" />
+						<img
+							src="Yatra-home.png"
+							alt="Homepage"
+							loading="lazy"
+						/>
 						<div class="gallery-overlay">
 							<h3>Homepage</h3>
-							<p>Clean and intuitive landing page design</p>
-						</div>
-					</div>
-					<div class="gallery-item">
-						<img src="Yatra-dashboard.png" alt="Trip Dashboard" />
-						<div class="gallery-overlay">
-							<h3>Trip Dashboard</h3>
-							<p>Comprehensive overview of planned trips</p>
-						</div>
-					</div>
-					<div class="gallery-item">
-						<img src="Yatra-budget.png" alt="Budget Calculator" />
-						<div class="gallery-overlay">
-							<h3>Budget Calculator</h3>
-							<p>Advanced budgeting and expense tracking</p>
-						</div>
-					</div>
-					<div class="gallery-item">
-						<img src="Yatra-planning.png" alt="Trip Planning" />
-						<div class="gallery-overlay">
-							<h3>Trip Planning</h3>
-							<p>Interactive itinerary creation tools</p>
+							<p>
+								Clean and intuitive landing page design for
+								travel planning
+							</p>
 						</div>
 					</div>
 					<div class="gallery-item">
 						<img
-							src="Yatra-recommendations.png"
-							alt="Destination Recommendations"
+							src="yatra-invite-friends.png"
+							alt="Invite Friends"
+							loading="lazy"
 						/>
 						<div class="gallery-overlay">
-							<h3>Recommendations</h3>
-							<p>Personalized destination suggestions</p>
+							<h3>Invite Friends</h3>
+							<p>
+								Collaborate with friends on trip planning
+								adventures
+							</p>
 						</div>
 					</div>
 					<div class="gallery-item">
-						<img src="Yatra-group.png" alt="Group Features" />
+						<img
+							src="Yatra-chat.png"
+							alt="Group Chat"
+							loading="lazy"
+						/>
 						<div class="gallery-overlay">
-							<h3>Group Features</h3>
-							<p>Collaborative planning and communication</p>
+							<h3>Group Chat</h3>
+							<p>
+								Real-time communication with travel companions
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="Yatra-recommendation.png"
+							alt="AI Recommendations"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>AI Recommendations</h3>
+							<p>
+								Smart destination and activity suggestions
+								powered by AI
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="Yatra-flowchart.png"
+							alt="Trip Flowchart"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Trip Flowchart</h3>
+							<p>
+								Visual representation of your complete travel
+								plan
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="Yatra-budgeting.png"
+							alt="Budget Management"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Smart Budgeting</h3>
+							<p>
+								Advanced budget allocation and expense tracking
+								system
+							</p>
 						</div>
 					</div>
 				</div>
@@ -223,52 +281,185 @@
 					<div class="tech-category">
 						<h3>Frontend Development</h3>
 						<div class="tech-tags">
-							<span class="tech-tag">HTML5</span>
-							<span class="tech-tag">CSS3</span>
+							<span class="tech-tag">React</span>
+							<span class="tech-tag">Redux Toolkit</span>
+							<span class="tech-tag">Tailwind CSS</span>
+							<span class="tech-tag">TypeScript</span>
+							<span class="tech-tag">React Query</span>
+							<span class="tech-tag">Socket.io</span>
+							<span class="tech-tag">Shadcn/ui</span>
+						</div>
+					</div>
+					<div class="tech-category">
+						<h3>Backend Development</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">Node.js</span>
+							<span class="tech-tag">Express.js</span>
 							<span class="tech-tag">JavaScript</span>
-							<span class="tech-tag">Responsive Design</span>
-							<span class="tech-tag">CSS Grid</span>
-							<span class="tech-tag">Flexbox</span>
+							<span class="tech-tag">Socket.io</span>
 						</div>
 					</div>
 					<div class="tech-category">
-						<h3>UI/UX Design</h3>
+						<h3>Database</h3>
 						<div class="tech-tags">
-							<span class="tech-tag">Modern UI</span>
-							<span class="tech-tag">User Experience</span>
-							<span class="tech-tag">Interactive Design</span>
-							<span class="tech-tag">Color Theory</span>
-							<span class="tech-tag">Typography</span>
-							<span class="tech-tag">Mobile First</span>
+							<span class="tech-tag">MongoDB</span>
+							<span class="tech-tag">Mongoose</span>
 						</div>
 					</div>
 					<div class="tech-category">
-						<h3>Features & Functionality</h3>
+						<h3>Recommendation System</h3>
 						<div class="tech-tags">
-							<span class="tech-tag">Budget Calculator</span>
-							<span class="tech-tag">Trip Planning</span>
-							<span class="tech-tag">Group Chat</span>
-							<span class="tech-tag">Recommendations</span>
-							<span class="tech-tag">Local Storage</span>
-							<span class="tech-tag">Form Validation</span>
+							<span class="tech-tag">FastAPI</span>
+							<span class="tech-tag">Google Gemini API</span>
+							<span class="tech-tag">Rule-based Engine</span>
+							<span class="tech-tag">Recommendation Engine</span>
 						</div>
 					</div>
-					<div class="tech-category">
-						<h3>Development Tools</h3>
-						<div class="tech-tags">
-							<span class="tech-tag">VS Code</span>
-							<span class="tech-tag">Git</span>
-							<span class="tech-tag">Browser DevTools</span>
-							<span class="tech-tag">Responsive Testing</span>
-							<span class="tech-tag"
-								>Performance Optimization</span
-							>
-							<span class="tech-tag">Cross-browser Testing</span>
+				</div>
+
+				<!-- Database Schema -->
+				<div class="database-schema">
+					<h3 class="schema-title">Database Schema</h3>
+					<div class="schema-image">
+						<img src="databse_schema.png" alt="Database Schema" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- How it Works Section -->
+		<section id="working" class="working">
+			<div class="container">
+				<h2 class="section-title">How Yatra Works</h2>
+				<div class="working-steps">
+					<!-- Step 1 -->
+					<div class="working-step">
+						<div class="step-content">
+							<img
+								src="Yatra-home.png"
+								alt="Plan a Trip"
+								class="step-image"
+							/>
+						</div>
+						<div class="step-description">
+							<h3>Plan a Trip</h3>
+							<p>
+								Start by choosing your start and end dates with
+								a memorable trip name. Set your destination and
+								begin organizing your perfect journey.
+							</p>
+						</div>
+					</div>
+
+					<!-- Step 2 -->
+					<div class="working-step reverse">
+						<div class="step-description">
+							<h3>Invite Your Friends</h3>
+							<p>
+								Easily invite friends and family to join your
+								trip planning adventure. Collaborate together to
+								create the perfect group experience.
+							</p>
+						</div>
+						<div class="step-content">
+							<img
+								src="yatra-invite-friends.png"
+								alt="Invite Friends"
+								class="step-image"
+							/>
+						</div>
+					</div>
+
+					<!-- Step 3 -->
+					<div class="working-step">
+						<div class="step-content">
+							<img
+								src="Yatra-chat.png"
+								alt="Real-time Chat"
+								class="step-image"
+							/>
+						</div>
+						<div class="step-description">
+							<h3>Chat in Real Time</h3>
+							<p>
+								Communicate instantly with your travel
+								companions through our integrated chat system.
+								Share ideas, make decisions, and stay connected.
+							</p>
+						</div>
+					</div>
+
+					<!-- Step 4 -->
+					<div class="working-step reverse">
+						<div class="step-description">
+							<h3>AI-Powered Recommendations</h3>
+							<p>
+								Trigger smart recommendations by using the
+								keyword <span class="highlight">@Yatra</span> in
+								chat to get personalized suggestions for places,
+								foods, and hotels in your destination.
+							</p>
+						</div>
+						<div class="step-content">
+							<img
+								src="Yatra-recommendation.png"
+								alt="AI Recommendations"
+								class="step-image"
+							/>
+						</div>
+					</div>
+
+					<!-- Step 5 -->
+					<div class="working-step">
+						<div class="step-content">
+							<img
+								src="Yatra-flowchart.png"
+								alt="Trip Flowchart"
+								class="step-image"
+							/>
+						</div>
+						<div class="step-description">
+							<h3>Real-time Trip Flowchart</h3>
+							<p>
+								Visualize your complete trip plan with an
+								interactive flowchart that displays daily
+								activities for you and your travel companions in
+								real-time.
+							</p>
+						</div>
+					</div>
+
+					<!-- Step 6 -->
+					<div class="working-step reverse">
+						<div class="step-description">
+							<h3>Smart Budgeting System</h3>
+							<p>
+								Allocate appropriate budgets for each day of
+								your trip with our intelligent budgeting system.
+								Track expenses and stay within your planned
+								budget.
+							</p>
+						</div>
+						<div class="step-content">
+							<img
+								src="Yatra-budgeting.png"
+								alt="Smart Budgeting"
+								class="step-image"
+							/>
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
+
+		<!-- Image Modal -->
+		<div id="imageModal" class="modal">
+			<div class="modal-content">
+				<span class="modal-close">&times;</span>
+				<img id="modalImage" src="" alt="" />
+				<div id="modalCaption"></div>
+			</div>
+		</div>
 
 		<!-- Footer -->
 		<footer class="footer">
@@ -304,6 +495,78 @@
 		</footer>
 
 		<script>
+			// Image Modal Functionality
+			const modal = document.getElementById("imageModal");
+			const modalImage = document.getElementById("modalImage");
+			const modalCaption = document.getElementById("modalCaption");
+			const closeModal = document.querySelector(".modal-close");
+
+			// Function to open modal
+			function openModal(imageSrc, imageAlt) {
+				modal.style.display = "flex";
+				modalImage.src = imageSrc;
+				modalImage.alt = imageAlt;
+				document.body.style.overflow = "hidden"; // Prevent background scrolling
+			}
+
+			// Function to close modal
+			function closeModalFunc() {
+				modal.style.display = "none";
+				document.body.style.overflow = "auto"; // Restore scrolling
+			}
+
+			// Add click event listeners to all clickable images (excluding hero section)
+			document.addEventListener("DOMContentLoaded", function() {
+				// Gallery images
+				const galleryImages = document.querySelectorAll(".gallery-item img");
+				galleryImages.forEach(img => {
+					img.addEventListener("click", function() {
+						openModal(this.src, this.alt);
+					});
+				});
+
+				// Step images in "How it Works" section
+				const stepImages = document.querySelectorAll(".step-image");
+				stepImages.forEach(img => {
+					img.addEventListener("click", function() {
+						openModal(this.src, this.alt);
+					});
+				});
+
+				// Database schema image
+				const schemaImage = document.querySelector(".schema-image img");
+				if (schemaImage) {
+					schemaImage.addEventListener("click", function() {
+						openModal(this.src, this.alt);
+					});
+				}
+
+				// Section logos (but not hero logo)
+				const sectionLogos = document.querySelectorAll(".section-logo");
+				sectionLogos.forEach(img => {
+					img.addEventListener("click", function() {
+						openModal(this.src, this.alt);
+					});
+				});
+			});
+
+			// Close modal events
+			closeModal.addEventListener("click", closeModalFunc);
+			
+			// Close modal when clicking outside the image
+			modal.addEventListener("click", function(e) {
+				if (e.target === modal) {
+					closeModalFunc();
+				}
+			});
+
+			// Close modal with Escape key
+			document.addEventListener("keydown", function(e) {
+				if (e.key === "Escape" && modal.style.display === "block") {
+					closeModalFunc();
+				}
+			});
+
 			// Smooth scrolling for navigation links
 			document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 				anchor.addEventListener("click", function (e) {
@@ -338,7 +601,7 @@
 			// Observe elements for animation
 			document
 				.querySelectorAll(
-					".feature-item, .overview-card, .gallery-item"
+					".feature-item, .overview-card, .gallery-item, .working-step"
 				)
 				.forEach((el) => {
 					el.style.opacity = "0";
