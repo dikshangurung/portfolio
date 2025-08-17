@@ -323,3 +323,43 @@ function addFadeInAnimations() {
 
 // Initialize fade-in animations when page loads
 window.addEventListener("load", addFadeInAnimations);
+
+// Certificate Modal Functions
+function openCertificateModal(imageSrc, altText) {
+	const modal = document.getElementById("certificateModal");
+	const modalImage = document.getElementById("modalCertificateImage");
+
+	modalImage.src = imageSrc;
+	modalImage.alt = altText;
+	modal.style.display = "block";
+
+	// Prevent body scroll when modal is open
+	document.body.style.overflow = "hidden";
+}
+
+function closeCertificateModal() {
+	const modal = document.getElementById("certificateModal");
+	modal.style.display = "none";
+
+	// Restore body scroll
+	document.body.style.overflow = "auto";
+}
+
+// Close modal when clicking outside the image
+document.addEventListener("DOMContentLoaded", function () {
+	const modal = document.getElementById("certificateModal");
+	if (modal) {
+		modal.addEventListener("click", function (e) {
+			if (e.target === modal) {
+				closeCertificateModal();
+			}
+		});
+	}
+
+	// Close modal with Escape key
+	document.addEventListener("keydown", function (e) {
+		if (e.key === "Escape") {
+			closeCertificateModal();
+		}
+	});
+});

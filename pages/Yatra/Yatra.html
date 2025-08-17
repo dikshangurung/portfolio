@@ -516,19 +516,20 @@
 			}
 
 			// Add click event listeners to all clickable images (excluding hero section)
-			document.addEventListener("DOMContentLoaded", function() {
+			document.addEventListener("DOMContentLoaded", function () {
 				// Gallery images
-				const galleryImages = document.querySelectorAll(".gallery-item img");
-				galleryImages.forEach(img => {
-					img.addEventListener("click", function() {
+				const galleryImages =
+					document.querySelectorAll(".gallery-item img");
+				galleryImages.forEach((img) => {
+					img.addEventListener("click", function () {
 						openModal(this.src, this.alt);
 					});
 				});
 
 				// Step images in "How it Works" section
 				const stepImages = document.querySelectorAll(".step-image");
-				stepImages.forEach(img => {
-					img.addEventListener("click", function() {
+				stepImages.forEach((img) => {
+					img.addEventListener("click", function () {
 						openModal(this.src, this.alt);
 					});
 				});
@@ -536,15 +537,15 @@
 				// Database schema image
 				const schemaImage = document.querySelector(".schema-image img");
 				if (schemaImage) {
-					schemaImage.addEventListener("click", function() {
+					schemaImage.addEventListener("click", function () {
 						openModal(this.src, this.alt);
 					});
 				}
 
 				// Section logos (but not hero logo)
 				const sectionLogos = document.querySelectorAll(".section-logo");
-				sectionLogos.forEach(img => {
-					img.addEventListener("click", function() {
+				sectionLogos.forEach((img) => {
+					img.addEventListener("click", function () {
 						openModal(this.src, this.alt);
 					});
 				});
@@ -552,16 +553,16 @@
 
 			// Close modal events
 			closeModal.addEventListener("click", closeModalFunc);
-			
+
 			// Close modal when clicking outside the image
-			modal.addEventListener("click", function(e) {
+			modal.addEventListener("click", function (e) {
 				if (e.target === modal) {
 					closeModalFunc();
 				}
 			});
 
 			// Close modal with Escape key
-			document.addEventListener("keydown", function(e) {
+			document.addEventListener("keydown", function (e) {
 				if (e.key === "Escape" && modal.style.display === "block") {
 					closeModalFunc();
 				}
