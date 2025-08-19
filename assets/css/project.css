@@ -1,0 +1,310 @@
+/* Projects Section */
+.projects-section {
+	background-color: var(--soft-white);
+}
+
+/* Featured Projects */
+.featured-projects {
+	margin-bottom: var(--space-xxl);
+}
+
+.category-title {
+	font-size: var(--font-size-large);
+	text-align: center;
+	margin-bottom: var(--space-xl);
+	color: var(--text-dark);
+	font-weight: 600;
+	position: relative;
+}
+
+.category-title::after {
+	content: "";
+	position: absolute;
+	bottom: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 40px;
+	height: 2px;
+	background: var(--brand-green);
+	border-radius: 1px;
+}
+
+.featured-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: var(--space-xl);
+	margin-bottom: var(--space-xxl);
+}
+
+.other-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: var(--space-lg);
+}
+
+/* Project Cards */
+.project-card {
+	background-color: var(--clean-white);
+	border-radius: var(--border-radius);
+	overflow: hidden;
+	box-shadow: var(--box-shadow-light);
+	transition: all var(--transition-smooth);
+	position: relative;
+}
+
+.project-card:hover {
+	transform: translateY(-5px);
+	box-shadow: var(--box-shadow-medium);
+}
+
+/* Featured Card Styles */
+.project-card.featured-card {
+	cursor: pointer;
+	border: 1px solid var(--light-gray);
+}
+
+.project-card.featured-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 15px 40px rgba(26, 179, 148, 0.15);
+	border-color: var(--brand-green);
+}
+
+.project-card.featured-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(
+		90deg,
+		var(--brand-green),
+		var(--brand-green-hover)
+	);
+	opacity: 0;
+	transition: opacity var(--transition-smooth);
+}
+
+.project-card.featured-card:hover::before {
+	opacity: 1;
+}
+
+/* Card Image Container */
+.card-image-container {
+	position: relative;
+	overflow: hidden;
+	height: 200px;
+}
+
+.card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--transition-smooth);
+}
+
+.project-card.featured-card:hover .card-image {
+	transform: scale(1.05);
+}
+
+/* Card Overlay for Featured Projects */
+.card-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(26, 179, 148, 0.9);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity var(--transition-smooth);
+}
+
+.project-card.featured-card:hover .card-overlay {
+	opacity: 1;
+}
+
+.view-project {
+	color: var(--clean-white);
+	font-weight: 600;
+	font-size: var(--font-size-normal);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* Card Content */
+.card-content {
+	padding: var(--space-lg);
+}
+
+.card-title {
+	font-size: var(--font-size-medium);
+	font-weight: 600;
+	color: var(--text-dark);
+	margin-bottom: var(--space-sm);
+}
+
+.card-description {
+	color: var(--text-medium);
+	font-size: var(--font-size-small);
+	line-height: 1.6;
+	margin-bottom: var(--space-md);
+}
+
+.card-tech {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-xs);
+}
+
+.tech-tag {
+	background-color: var(--brand-green-light);
+	color: var(--brand-green);
+	padding: 4px 10px;
+	border-radius: 15px;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* Simple Card Styles for Other Projects */
+.project-card.simple-card {
+	transition: all var(--transition-smooth);
+}
+
+.project-card.simple-card:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--box-shadow-medium);
+}
+
+.card-content-simple {
+	padding: var(--space-md);
+}
+
+.card-description-simple {
+	color: var(--text-light);
+	font-size: var(--font-size-small);
+	margin-top: var(--space-xs);
+}
+
+/* Other Projects Section */
+.other-projects {
+	margin-top: var(--space-xxl);
+}
+
+.other-projects .other-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 2rem;
+	margin-top: 2rem;
+}
+
+.other-projects .simple-card {
+	background: var(--bg-secondary, #ffffff);
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+	transition: all 0.3s ease;
+	border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.other-projects .simple-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.other-projects .card-image-container {
+	width: 100%;
+	height: 200px;
+	overflow: hidden;
+}
+
+.other-projects .card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.3s ease;
+}
+
+.other-projects .simple-card:hover .card-image {
+	transform: scale(1.05);
+}
+
+.other-projects .card-content-simple {
+	padding: 1.5rem;
+}
+
+.other-projects .card-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--text-primary, #1f2937);
+	margin-bottom: 0.5rem;
+	line-height: 1.3;
+}
+
+.other-projects .card-description-simple {
+	color: var(--text-secondary, #6b7280);
+	font-size: 0.95rem;
+	line-height: 1.5;
+	margin-bottom: 1rem;
+}
+
+/* Tech Stack Styling - Scoped to Other Projects */
+.other-projects .tech-stack {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 1.25rem;
+}
+
+.other-projects .tech-tag {
+	background: var(--accent-bg, #f3f4f6);
+	color: var(--accent-text, #374151);
+	padding: 0.25rem 0.75rem;
+	border-radius: 20px;
+	font-size: 0.8rem;
+	font-weight: 500;
+	border: 1px solid var(--accent-border, #d1d5db);
+	transition: all 0.2s ease;
+}
+
+.other-projects .tech-tag:hover {
+	background: var(--accent-hover, #e5e7eb);
+	transform: translateY(-1px);
+}
+
+/* Link Styling - Scoped to Other Projects */
+.other-projects .card-link-container {
+	margin-top: auto;
+}
+
+.other-projects .card-link {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.6rem 1.2rem;
+	background: var(--brand-green);
+	color: white;
+	text-decoration: none;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	border: none;
+	cursor: pointer;
+}
+
+.other-projects .card-link:hover {
+	background: var(--brand-green-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.other-projects .card-link.disabled {
+	background: var(--disabled-bg, #9ca3af);
+	color: var(--disabled-text, #ffffff);
+	cursor: not-allowed;
+	pointer-events: none;
+}

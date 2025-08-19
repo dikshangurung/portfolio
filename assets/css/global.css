@@ -1,0 +1,65 @@
+/* Clean Portfolio Styles with Human-readable CSS Variables */
+:root {
+	/* Color Scheme - Minimal and Professional */
+	--clean-white: #ffffff;
+	--soft-white: #fafafa;
+	--light-gray: #f5f5f5;
+	--medium-gray: #e0e0e0;
+	--text-dark: #2c3e50;
+	--text-medium: #34495e;
+	--text-light: #7f8c8d;
+	--text-muted: #95a5a6;
+	--brand-green: #1ab394;
+	--brand-green-hover: #17a185;
+	--brand-green-light: #e8f5f3;
+
+	/* Typography */
+	--main-font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	--font-size-small: 14px;
+	--font-size-normal: 16px;
+	--font-size-medium: 18px;
+	--font-size-large: 24px;
+	--font-size-xl: 32px;
+	--font-size-xxl: 40px;
+	--line-height-normal: 1.6;
+	--line-height-tight: 1.3;
+
+	/* Spacing */
+	--space-xs: 0.5rem;
+	--space-sm: 1rem;
+	--space-md: 1.5rem;
+	--space-lg: 2rem;
+	--space-xl: 3rem;
+	--space-xxl: 4rem;
+
+	/* Layout */
+	--sidebar-width: 100px;
+	--content-max-width: 1200px;
+	--border-radius: 8px;
+	--border-radius-small: 4px;
+	--box-shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
+	--box-shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+	/* Transitions */
+	--transition-fast: 0.2s ease;
+	--transition-smooth: 0.3s ease;
+}
+
+/* Reset and Base */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	font-size: 16px;
+}
+
+body {
+	font-family: var(--main-font);
+	background-color: var(--clean-white);
+	color: var(--text-dark);
+	line-height: var(--line-height-normal);
+}

@@ -1,5 +1,3 @@
-// Clean Portfolio JavaScript - Enhanced and Mobile Responsive with EmailJS
-
 // EmailJS Configuration
 const EMAILJS_CONFIG = {
 	publicKey: "mdzRPP7akUYbHOdEX",
@@ -283,22 +281,66 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
-	// Enhanced contact form handling with EmailJS
+	// Enhanced contact form handling with Honeypot and Time-based Protection
 	function setupContactForm() {
 		const contactForm = document.querySelector(".message-form");
 		const submitButton = document.querySelector(".submit-button");
+
+		// Track when form was loaded for time-based protection
+		let formLoadTime = Date.now();
 
 		if (contactForm) {
 			contactForm.addEventListener("submit", async function (e) {
 				e.preventDefault();
 
+				// Calculate time spent on form
+				const timeTaken = Date.now() - formLoadTime;
+
 				// Get form data
 				const formData = new FormData(contactForm);
+				const honeypot = formData.get("website"); // honeypot field
 				const name = formData.get("name")?.trim();
 				const email = formData.get("email")?.trim();
 				const message = formData.get("message")?.trim();
 
-				// Validate input
+				// SPAM PROTECTION 1: Honeypot Check
+				if (honeypot) {
+					// Bot detected - fake success message and silently reject
+					console.log("Bot detected via honeypot field");
+					showNotification(
+						"Thank you! Your message has been sent successfully.",
+						"success"
+					);
+					contactForm.reset();
+					formLoadTime = Date.now(); // reset timestamp
+					return;
+				}
+
+				// SPAM PROTECTION 2: Time-based Check (minimum 3 seconds)
+				if (timeTaken < 3000) {
+					showNotification(
+						"Please take your time filling out the form.",
+						"error"
+					);
+					return;
+				}
+
+				// SPAM PROTECTION 3: Rate Limiting (1 submission per minute)
+				const lastSubmission =
+					localStorage.getItem("lastFormSubmission");
+				const now = Date.now();
+				if (lastSubmission && now - parseInt(lastSubmission) < 60000) {
+					const remainingTime = Math.ceil(
+						(60000 - (now - parseInt(lastSubmission))) / 1000
+					);
+					showNotification(
+						`Please wait ${remainingTime} seconds before sending another message.`,
+						"error"
+					);
+					return;
+				}
+
+				// Standard form validation
 				if (!name || !email || !message) {
 					showNotification("Please fill in all fields.", "error");
 					return;
@@ -314,6 +356,15 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
+				// Message length validation
+				if (message.length < 10) {
+					showNotification(
+						"Please enter a message with at least 10 characters.",
+						"error"
+					);
+					return;
+				}
+
 				// Show loading state
 				if (submitButton) {
 					const originalText = submitButton.textContent;
@@ -324,16 +375,16 @@ document.addEventListener("DOMContentLoaded", function () {
 					try {
 						// Format message for your template
 						const formattedMessage = `
-							Name: ${name}
-							Email: ${email}
+Name: ${name}
+Email: ${email}
 
-							Message:
-							${message}
+Message:
+${message}
                         `;
 
 						// Prepare template parameters to match your template
 						const templateParams = {
-							message: formattedMessage, // This matches {{message}} in your template
+							message: formattedMessage,
 							from_name: name,
 							from_email: email,
 							to_name: "Dikshan Gurung",
@@ -352,6 +403,13 @@ document.addEventListener("DOMContentLoaded", function () {
 							"success"
 						);
 						contactForm.reset();
+						formLoadTime = Date.now(); // reset timestamp
+
+						// Save submission time for rate limiting
+						localStorage.setItem(
+							"lastFormSubmission",
+							now.toString()
+						);
 					} catch (error) {
 						console.error("Error sending email:", error);
 						showNotification(
@@ -365,6 +423,11 @@ document.addEventListener("DOMContentLoaded", function () {
 						submitButton.style.opacity = "1";
 					}
 				}
+			});
+
+			// Reset form load time when form is reset
+			contactForm.addEventListener("reset", function () {
+				formLoadTime = Date.now();
 			});
 		}
 	}
@@ -502,19 +565,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		window.addEventListener("resize", handleResize);
 	}
 
-	// Throttle scroll events for better performance
-	function throttle(func, wait) {
-		let timeout;
-		return function executedFunction(...args) {
-			const later = () => {
-				clearTimeout(timeout);
-				func(...args);
-			};
-			clearTimeout(timeout);
-			timeout = setTimeout(later, wait);
-		};
-	}
-
 	// Enhanced initialization function
 	function init() {
 		setupSmoothScrolling();
@@ -523,7 +573,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		setupResizeHandler();
 		setupSkillBarAnimation();
 		setupScrollAnimations();
-		setupContactForm();
+		setupContactForm(); // Now includes spam protection
 		setupPageTransitions();
 		setupButtonEffects();
 
@@ -534,7 +584,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateActiveNavigation();
 
 		console.log(
-			"Responsive Portfolio with EmailJS initialized successfully!"
+			"Responsive Portfolio with Spam Protection initialized successfully!"
 		);
 	}
 
@@ -617,7 +667,7 @@ function openCertificateModal(imageSrc, altText) {
 			});
 
 			modal.addEventListener("touchmove", function (e) {
-				const currentY = e.touches[0].clientY;
+				const currentY = e.touches.clientY;
 				const diff = startY - currentY;
 
 				// Swipe down to close
