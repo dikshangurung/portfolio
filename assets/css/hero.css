@@ -214,6 +214,7 @@
 	height: 380px;
 	border-radius: 50%;
 	object-fit: cover;
+	object-position: 50% 30%;
 	box-shadow: var(--box-shadow-medium);
 	position: relative;
 	z-index: 2;
