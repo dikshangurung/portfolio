@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Praman - KYC Verification Platform | Dikshan Gurung</title>
+		<link rel="stylesheet" href="Praman.css" />
+	</head>
+	<body>
+		<!-- Navigation -->
+		<nav class="navbar">
+			<div class="nav-container">
+				<div class="nav-logo">
+					<img
+						src="pramana_logo_shikhara.svg"
+						alt="Praman Logo"
+						class="logo-img"
+					/>
+					<h2>Praman</h2>
+				</div>
+				<ul class="nav-links">
+					<li><a href="#overview" class="nav-link">Overview</a></li>
+					<li>
+						<a href="#architecture" class="nav-link">Architecture</a>
+					</li>
+					<li><a href="#features" class="nav-link">Features</a></li>
+					<li><a href="#pipeline" class="nav-link">Pipeline</a></li>
+					<li><a href="#gallery" class="nav-link">Gallery</a></li>
+					<li>
+						<a href="#technology" class="nav-link">Technology</a>
+					</li>
+					<li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+					<li>
+						<a href="../../index.html" class="nav-link"
+							>Back to Portfolio</a
+						>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<!-- Hero Section -->
+		<section class="hero">
+			<div class="hero-container">
+				<div class="hero-content">
+					<span class="hero-badge"
+						><span class="dot"></span> Compliance-Grade KYC</span
+					>
+					<h1 class="hero-title">Praman</h1>
+					<p class="hero-subtitle">
+						Identity Verification as a Service
+					</p>
+					<p class="hero-description">
+						A multi-tenant, event-driven KYC platform that lets
+						fintech clients verify their end users' identities through
+						a single API. It issues a verification session, hosts the
+						document and selfie capture flow, runs OCR and
+						face-matching off the request path, applies a decision,
+						and reports the result back through a signed webhook.
+					</p>
+					<div class="hero-meta">
+						<div class="hero-meta-item">
+							<span class="value">6</span>
+							<span class="label">Microservices</span>
+						</div>
+						<div class="hero-meta-item">
+							<span class="value">7</span>
+							<span class="label">Kafka Topics</span>
+						</div>
+						<div class="hero-meta-item">
+							<span class="value">3</span>
+							<span class="label">Languages</span>
+						</div>
+						<div class="hero-meta-item">
+							<span class="value">8</span>
+							<span class="label">Build Phases</span>
+						</div>
+					</div>
+					<div class="hero-buttons">
+						<a href="#architecture" class="btn-primary"
+							>Explore Architecture</a
+						>
+						<a href="#pipeline" class="btn-secondary"
+							>See the Pipeline</a
+						>
+					</div>
+				</div>
+				<div class="hero-image">
+					<img
+						src="praman-landing.png"
+						alt="Praman KYC Platform"
+						class="clickable-image"
+					/>
+				</div>
+			</div>
+		</section>
+
+		<!-- Overview Section -->
+		<section id="overview" class="overview">
+			<div class="container">
+				<h2 class="section-title">
+					<img
+						src="pramana_logo_shikhara.svg"
+						alt="Praman Logo"
+						class="section-logo"
+					/>
+					Project Overview
+				</h2>
+				<p class="section-subtitle">
+					Praman ("proof" in Sanskrit) is a production-shaped KYC
+					verification platform — a backend systems project built to
+					demonstrate distributed, event-driven architecture end to
+					end.
+				</p>
+				<div class="overview-grid">
+					<div class="overview-card">
+						<h3>Purpose</h3>
+						<p>
+							Provide Know-Your-Customer identity verification as a
+							service. Third-party applications (tenants) integrate
+							once and verify their users' identities — document,
+							biometric, and decision — without building any of it
+							themselves.
+						</p>
+					</div>
+					<div class="overview-card">
+						<h3>Architectural Asynchrony</h3>
+						<p>
+							The verification pipeline runs entirely off the HTTP
+							request path. Tenants get an immediate session
+							response and the final result later via webhook. Kafka
+							decouples every slow step, so no thread blocks on OCR
+							or face-matching.
+						</p>
+					</div>
+					<div class="overview-card">
+						<h3>Shared-Schema Multi-Tenancy</h3>
+						<p>
+							All tenants share one database and schema; every
+							tenant-owned table carries a <code>tenant_id</code>
+							discriminator. Isolation is enforced at the
+							application layer and, where enabled, by PostgreSQL
+							Row-Level Security.
+						</p>
+					</div>
+					<div class="overview-card">
+						<h3>Key Innovation</h3>
+						<p>
+							A long-running verification saga orchestrated across
+							Java services and Python ML workers — fanning out OCR
+							and face checks, collecting results idempotently, and
+							running a decision engine, all coordinated over Kafka.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Architecture Section -->
+		<section id="architecture" class="architecture">
+			<div class="container">
+				<h2 class="section-title no-sub">Service Architecture</h2>
+				<p class="section-subtitle">
+					Each box is a separately deployed unit. Spring Boot services
+					and Python workers communicate over Kafka for the pipeline;
+					synchronous calls are used only where a request needs an
+					immediate answer.
+				</p>
+
+				<h3 class="arch-group-title">Application Services</h3>
+				<div class="arch-grid">
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Gateway Server</h4>
+							<span class="lang-tag lang-java">Java</span>
+						</div>
+						<p>
+							Single entry point on Spring Cloud Gateway. Validates
+							the Keycloak JWT, applies rate limiting and routing,
+							resolves <code>tenant_id</code> from the token and
+							injects it downstream as a trusted header.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Session Service</h4>
+							<span class="lang-tag lang-java">Java</span>
+						</div>
+						<p>
+							Owns the KYC session lifecycle. Creates sessions,
+							issues the hosted verification URL + QR + short-lived
+							upload token, accepts end-user uploads to MinIO, and
+							emits <code>documents.received</code>.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Verification Service</h4>
+							<span class="lang-tag lang-java">Java</span>
+						</div>
+						<p>
+							The saga orchestrator. Consumes
+							<code>documents.received</code>, fans out OCR + face
+							work, collects results, runs the decision engine, and
+							emits <code>verification.completed</code>.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Webhook Service</h4>
+							<span class="lang-tag lang-java">Java</span>
+						</div>
+						<p>
+							Consumes <code>verification.completed</code>, delivers
+							an HMAC-signed webhook to the tenant callback URL,
+							retries with backoff, and dead-letters on exhaustion.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>OCR Worker</h4>
+							<span class="lang-tag lang-python">Python</span>
+						</div>
+						<p>
+							A Kafka consumer loop. Pulls the document image from
+							MinIO, preprocesses with OpenCV, runs PaddleOCR,
+							extracts MRZ/fields, and emits
+							<code>ocr.completed</code>.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Face / Liveness Worker</h4>
+							<span class="lang-tag lang-python">Python</span>
+						</div>
+						<p>
+							Same consumer shape. Computes a face-match score (doc
+							portrait vs selfie) and passive liveness behind a
+							clean interface, emitting <code>face.completed</code>.
+						</p>
+					</div>
+				</div>
+
+				<h3 class="arch-group-title">Platform &amp; Infrastructure</h3>
+				<div class="arch-grid">
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Config &amp; Eureka</h4>
+							<span class="lang-tag lang-infra">Infra</span>
+						</div>
+						<p>
+							Spring Cloud Config serves Git-backed externalized
+							configuration; Eureka provides service discovery and
+							client-side load balancing for the Java services.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Keycloak</h4>
+							<span class="lang-tag lang-infra">Infra</span>
+						</div>
+						<p>
+							Identity &amp; access management. M2M clients (Client
+							Credentials), dashboard users (Auth Code + PKCE), and
+							OTP/MFA — no rolled-your-own auth.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Kafka (KRaft)</h4>
+							<span class="lang-tag lang-infra">Infra</span>
+						</div>
+						<p>
+							The asynchronous backbone. Topics keyed by
+							<code>sessionId</code> preserve per-session ordering;
+							consumer groups, idempotency and a DLQ keep the
+							pipeline reliable.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>PostgreSQL &amp; MinIO</h4>
+							<span class="lang-tag lang-infra">Infra</span>
+						</div>
+						<p>
+							Postgres is the multi-tenant shared-schema datastore;
+							MinIO (S3-compatible) holds the large, sensitive
+							document and selfie images, encrypted at rest.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Grafana Stack</h4>
+							<span class="lang-tag lang-infra">Infra</span>
+						</div>
+						<p>
+							Loki for logs, Prometheus for metrics, Tempo for
+							traces — collected by Grafana Alloy and unified in
+							Grafana dashboards and alerts.
+						</p>
+					</div>
+					<div class="service-card">
+						<div class="service-head">
+							<h4>Decision Engine</h4>
+							<span class="lang-tag lang-java">Java</span>
+						</div>
+						<p>
+							Inside Verification: checks name match, face-score
+							threshold, liveness, document expiry and number sanity
+							to produce APPROVED / REJECTED / MANUAL_REVIEW.
+						</p>
+					</div>
+				</div>
+
+				<div class="code-block">
+<pre>  Tenant backend ──(JWT)──▶  GATEWAY  ──lb://──▶  SESSION ──┐
+                                │                            │ stores image
+                                │ resolves tenant_id         ▼
+  End user ──(upload token)─────┘                          MinIO
+                                                             │
+                          kyc.documents.received  ◀──────────┘
+                                   │  (Kafka)
+                                   ▼
+                            VERIFICATION  ──┬─▶ kyc.ocr.requested  ─▶ OCR WORKER (py)
+                            (saga orch.)    └─▶ kyc.face.requested ─▶ FACE WORKER (py)
+                                   ▲                                      │
+                                   └──── kyc.ocr.completed / face ◀───────┘
+                                   │  decision engine
+                                   ▼
+                       kyc.verification.completed ─▶ WEBHOOK ─▶ tenant callback (HMAC)</pre>
+				</div>
+				<p class="diagram-caption">
+					Request flow (solid) and the event-driven pipeline (Kafka) —
+					read top to bottom.
+				</p>
+			</div>
+		</section>
+
+		<!-- Features Section -->
+		<section id="features" class="features">
+			<div class="container">
+				<h2 class="section-title no-sub">Platform Capabilities</h2>
+				<div class="features-grid">
+					<div class="feature-item">
+						<div class="feature-icon">🪪</div>
+						<h3>Document &amp; MRZ Extraction</h3>
+						<p>
+							PaddleOCR reads the document; the Machine Readable
+							Zone is targeted first for checksum-validated name,
+							number, DOB and expiry, with free-text OCR as
+							fallback.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">🧑‍💻</div>
+						<h3>Biometric &amp; Liveness</h3>
+						<p>
+							A face-match score compares the document portrait to a
+							live selfie, with a passive liveness check behind a
+							clean, swappable scorer interface.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">📱</div>
+						<h3>Hosted Verification Flow</h3>
+						<p>
+							A mobile-first capture page opened via URL or QR,
+							authorized by a short-lived upload token — no login,
+							locked to a single session.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">🔔</div>
+						<h3>Signed Webhooks</h3>
+						<p>
+							Final decisions are delivered as HMAC-signed POSTs to
+							the tenant's callback, retried with exponential backoff
+							and dead-lettered when exhausted.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">🏢</div>
+						<h3>Multi-Tenant Console</h3>
+						<p>
+							A Keycloak-secured dashboard where tenants browse
+							verification history, configure webhooks, manage API
+							credentials, and run their team — scoped to their data.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">🔐</div>
+						<h3>RBAC &amp; Identity</h3>
+						<p>
+							OWNER / ADMIN / MEMBER realm roles in the JWT gate what
+							a user can do, while <code>tenant_id</code> controls
+							which data they can touch — two independent axes.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">⚙️</div>
+						<h3>Configurable Policy</h3>
+						<p>
+							Per-tenant verification policy: face-match threshold,
+							session expiry, and which checks (document, biometric,
+							watchlist) are required.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">📊</div>
+						<h3>Full Observability</h3>
+						<p>
+							One trace follows a verification across Session, two
+							Python workers and Webhook — jump from a Loki log line
+							straight into its Tempo trace.
+						</p>
+					</div>
+					<div class="feature-item">
+						<div class="feature-icon">🧾</div>
+						<h3>Compliance Audit Trail</h3>
+						<p>
+							An append-only, per-tenant audit log records who did
+							what — distinct from operational logs, important for a
+							compliance-facing product.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Pipeline / How it Works -->
+		<section id="pipeline" class="pipeline">
+			<div class="container">
+				<h2 class="section-title no-sub">The Verification Saga</h2>
+				<p class="section-subtitle">
+					A single verification is a long-running saga. The Verification
+					Service orchestrates it, deciding only once every input has
+					arrived. Every Kafka message carries
+					<code>tenant_id</code> and <code>sessionId</code> so context
+					flows through without DB lookups.
+				</p>
+				<div class="pipeline-steps">
+					<div class="pipeline-step">
+						<div class="step-num">1</div>
+						<div>
+							<h4>Tenant creates a session</h4>
+							<p>
+								The tenant backend calls
+								<code>POST /v1/sessions</code> as a Keycloak M2M
+								client. Session Service persists a
+								<code>CREATED</code> session and returns a
+								verification URL, QR code, upload token and expiry.
+							</p>
+						</div>
+					</div>
+					<div class="pipeline-step">
+						<div class="step-num">2</div>
+						<div>
+							<h4>End user uploads documents</h4>
+							<p>
+								The user opens the URL (or scans the QR) on their
+								phone, authorized by the upload token. They submit
+								an ID and selfie; the files stream to MinIO and the
+								session moves to
+								<code>DOCUMENTS_RECEIVED</code>.
+							</p>
+						</div>
+					</div>
+					<div class="pipeline-step">
+						<div class="step-num">3</div>
+						<div>
+							<h4>Pipeline fans out</h4>
+							<p>
+								Verification Service consumes
+								<code>kyc.documents.received</code>, creates a
+								PENDING record, and emits
+								<code>kyc.ocr.requested</code> and
+								<code>kyc.face.requested</code>.
+							</p>
+						</div>
+					</div>
+					<div class="pipeline-step">
+						<div class="step-num">4</div>
+						<div>
+							<h4>Workers do their work</h4>
+							<p>
+								The OCR and Face workers consume their topics
+								independently, read images from MinIO, run their
+								models, and emit
+								<code>kyc.ocr.completed</code> and
+								<code>kyc.face.completed</code> with structured
+								fields and scores.
+							</p>
+						</div>
+					</div>
+					<div class="pipeline-step">
+						<div class="step-num">5</div>
+						<div>
+							<h4>Decision engine runs</h4>
+							<p>
+								Once both results are in (tracked by idempotent
+								state guards), the engine checks name match,
+								face-score threshold, liveness, expiry and number
+								sanity, and writes
+								<code>APPROVED / REJECTED / MANUAL_REVIEW</code>.
+							</p>
+						</div>
+					</div>
+					<div class="pipeline-step">
+						<div class="step-num">6</div>
+						<div>
+							<h4>Result is delivered</h4>
+							<p>
+								Webhook Service consumes
+								<code>kyc.verification.completed</code>, signs the
+								payload with the tenant's secret, and POSTs it to
+								their callback — retrying then dead-lettering on
+								failure.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="code-block">
+<pre>CREATED ──▶ DOCUMENTS_RECEIVED ──▶ PROCESSING ──▶ COMPLETED
+   │                                                  ▲
+   │                                                  │
+   └─▶ EXPIRED (upload token TTL elapsed)             │
+                                                      │
+   PROCESSING ──(decision)──▶ APPROVED / REJECTED / MANUAL_REVIEW</pre>
+				</div>
+				<p class="diagram-caption">Session state machine.</p>
+			</div>
+		</section>
+
+		<!-- Gallery Section -->
+		<section id="gallery" class="gallery">
+			<div class="container">
+				<h2 class="section-title no-sub">Console &amp; Product</h2>
+				<div class="gallery-grid">
+					<div class="gallery-item">
+						<img
+							src="praman-landing.png"
+							alt="Marketing landing page"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Landing</h3>
+							<p>
+								"Know your customer in seconds, not days" — the
+								product front door.
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="praman-verifications.png"
+							alt="Verifications dashboard"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Verifications</h3>
+							<p>
+								Searchable, filterable history with decision,
+								score and status per session.
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="praman-webhooks.png"
+							alt="Webhook configuration"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Webhooks</h3>
+							<p>
+								Callback URL, signing secret, subscribed events and
+								recent delivery attempts.
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="praman-credentials.png"
+							alt="API credentials"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>API Credentials</h3>
+							<p>
+								Publishable client ID, server-side secret keys, and
+								live/test environments.
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="praman-team.png"
+							alt="Team management"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Team &amp; RBAC</h3>
+							<p>
+								Owner / Admin / Member roles, invites and status —
+								the RBAC model made tangible.
+							</p>
+						</div>
+					</div>
+					<div class="gallery-item">
+						<img
+							src="praman-settings.png"
+							alt="Verification policy settings"
+							loading="lazy"
+						/>
+						<div class="gallery-overlay">
+							<h3>Settings &amp; Policy</h3>
+							<p>
+								Face-match threshold, session expiry, region and
+								required checks per organization.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Technology Section -->
+		<section id="technology" class="technology">
+			<div class="container">
+				<h2 class="section-title no-sub">Technology Stack</h2>
+				<div class="tech-categories">
+					<div class="tech-category">
+						<h3>Frontend</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">React</span>
+							<span class="tech-tag">Vite</span>
+							<span class="tech-tag">TypeScript</span>
+							<span class="tech-tag">OIDC / PKCE</span>
+						</div>
+					</div>
+					<div class="tech-category">
+						<h3>Backend Services</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">Java</span>
+							<span class="tech-tag">Spring Boot</span>
+							<span class="tech-tag">Spring Cloud Gateway</span>
+							<span class="tech-tag">Spring Cloud Stream</span>
+							<span class="tech-tag">Spring Cloud Function</span>
+							<span class="tech-tag">Spring Security</span>
+						</div>
+					</div>
+					<div class="tech-category">
+						<h3>ML Workers</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">Python</span>
+							<span class="tech-tag">PaddleOCR</span>
+							<span class="tech-tag">OpenCV</span>
+							<span class="tech-tag">confluent-kafka</span>
+							<span class="tech-tag">FastAPI (sidecar)</span>
+						</div>
+					</div>
+					<div class="tech-category">
+						<h3>Messaging &amp; Data</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">Apache Kafka (KRaft)</span>
+							<span class="tech-tag">PostgreSQL</span>
+							<span class="tech-tag">MinIO (S3)</span>
+							<span class="tech-tag">Row-Level Security</span>
+						</div>
+					</div>
+					<div class="tech-category">
+						<h3>Identity &amp; Platform</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">Keycloak</span>
+							<span class="tech-tag">OAuth2 / OIDC</span>
+							<span class="tech-tag">Spring Cloud Config</span>
+							<span class="tech-tag">Eureka</span>
+							<span class="tech-tag">Docker Compose</span>
+						</div>
+					</div>
+					<div class="tech-category">
+						<h3>Observability</h3>
+						<div class="tech-tags">
+							<span class="tech-tag">Grafana</span>
+							<span class="tech-tag">Loki</span>
+							<span class="tech-tag">Prometheus</span>
+							<span class="tech-tag">Tempo</span>
+							<span class="tech-tag">OpenTelemetry</span>
+							<span class="tech-tag">Micrometer</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Roadmap Section -->
+		<section id="roadmap" class="roadmap">
+			<div class="container">
+				<h2 class="section-title no-sub">Phased Build Plan</h2>
+				<p class="section-subtitle">
+					Praman is built in dependency-ordered phases, each with a
+					clear "done when" exit criterion. The distributed-systems
+					core (phases 3–5) carries the most weight.
+				</p>
+				<div class="roadmap-timeline">
+					<div class="phase done">
+						<div class="phase-head">
+							<h4>Phase 1 — Foundations &amp; Identity</h4>
+							<span class="status-badge status-done">Complete</span>
+						</div>
+						<p>
+							Config Server, Eureka, PostgreSQL + MinIO, and a
+							Keycloak realm. The Gateway validates JWTs via JWKS and
+							injects <code>X-Tenant-Id</code> downstream — a token
+							reaches a protected endpoint, invalid tokens are
+							rejected.
+						</p>
+					</div>
+					<div class="phase current">
+						<div class="phase-head">
+							<h4>Phase 2 — Session Service &amp; Hosted Upload</h4>
+							<span class="status-badge status-current"
+								>In Progress</span
+							>
+						</div>
+						<p>
+							Session creation, hosted verification URL + QR + upload
+							token, file streaming to MinIO, and idempotency-key
+							handling.
+						</p>
+					</div>
+					<div class="phase">
+						<div class="phase-head">
+							<h4>Phase 3 — Kafka Pipeline Skeleton</h4>
+							<span class="status-badge status-planned"
+								>Planned</span
+							>
+						</div>
+						<p>
+							Prove the event-driven flow end to end with stubbed
+							processing, driven entirely by Kafka events.
+						</p>
+					</div>
+					<div class="phase">
+						<div class="phase-head">
+							<h4>Phase 4 — Python Workers (Real OCR)</h4>
+							<span class="status-badge status-planned"
+								>Planned</span
+							>
+						</div>
+						<p>
+							Replace stubs with real PaddleOCR extraction and a
+							clean face/liveness interface, plus health/metrics
+							sidecars.
+						</p>
+					</div>
+					<div class="phase">
+						<div class="phase-head">
+							<h4>Phase 5 — Decision Engine &amp; Webhooks</h4>
+							<span class="status-badge status-planned"
+								>Planned</span
+							>
+						</div>
+						<p>
+							Turn collected results into a real verdict and deliver
+							it reliably via signed, retried webhooks.
+						</p>
+					</div>
+					<div class="phase">
+						<div class="phase-head">
+							<h4>Phase 6 — Observability</h4>
+							<span class="status-badge status-planned"
+								>Planned</span
+							>
+						</div>
+						<p>
+							Metrics, structured logs to Loki, and end-to-end
+							tracing across services and Kafka into Tempo.
+						</p>
+					</div>
+					<div class="phase">
+						<div class="phase-head">
+							<h4>Phase 7 — Frontends</h4>
+							<span class="status-badge status-planned"
+								>Planned</span
+							>
+						</div>
+						<p>
+							The authenticated tenant dashboard and the mobile-first
+							hosted verification flow.
+						</p>
+					</div>
+					<div class="phase">
+						<div class="phase-head">
+							<h4>Phase 8 — Hardening</h4>
+							<span class="status-badge status-planned"
+								>Planned</span
+							>
+						</div>
+						<p>
+							Row-Level Security, PII column encryption, method-level
+							RBAC, rate limiting, and a single reproducible
+							docker-compose.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Image Modal -->
+		<div id="imageModal" class="modal">
+			<div class="modal-content">
+				<span class="modal-close">&times;</span>
+				<img id="modalImage" src="" alt="" />
+				<div id="modalCaption"></div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<footer class="footer">
+			<div class="container">
+				<div class="footer-content">
+					<div class="footer-section">
+						<h3>Praman Platform</h3>
+						<p>
+							A multi-tenant, event-driven KYC verification platform
+							built as a microservices project to demonstrate
+							distributed backend architecture end to end.
+						</p>
+					</div>
+					<div class="footer-section">
+						<h3>Developer</h3>
+						<p>Developed by <strong>Dikshan Gurung</strong></p>
+						<p>Backend &amp; Distributed Systems Engineer</p>
+					</div>
+					<div class="footer-section">
+						<h3>Architecture</h3>
+						<p>
+							Java + Spring Boot · Python · Kafka · PostgreSQL ·
+							Keycloak · MinIO · Docker · Grafana stack.
+						</p>
+					</div>
+				</div>
+				<div class="footer-bottom">
+					<p>
+						&copy; 2026 Praman KYC Platform. Designed and Developed by
+						Dikshan Gurung.
+					</p>
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			// Image Modal Functionality
+			const modal = document.getElementById("imageModal");
+			const modalImage = document.getElementById("modalImage");
+			const closeModal = document.querySelector(".modal-close");
+
+			function openModal(imageSrc, imageAlt) {
+				modal.style.display = "flex";
+				modalImage.src = imageSrc;
+				modalImage.alt = imageAlt;
+				document.body.style.overflow = "hidden";
+			}
+
+			function closeModalFunc() {
+				modal.style.display = "none";
+				document.body.style.overflow = "auto";
+			}
+
+			document.addEventListener("DOMContentLoaded", function () {
+				document
+					.querySelectorAll(".gallery-item img, .clickable-image")
+					.forEach((img) => {
+						img.addEventListener("click", function () {
+							openModal(this.src, this.alt);
+						});
+					});
+			});
+
+			closeModal.addEventListener("click", closeModalFunc);
+			modal.addEventListener("click", function (e) {
+				if (e.target === modal) closeModalFunc();
+			});
+			document.addEventListener("keydown", function (e) {
+				if (e.key === "Escape" && modal.style.display === "flex")
+					closeModalFunc();
+			});
+
+			// Smooth scrolling for navigation links
+			document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+				anchor.addEventListener("click", function (e) {
+					e.preventDefault();
+					const target = document.querySelector(
+						this.getAttribute("href")
+					);
+					if (target) {
+						target.scrollIntoView({
+							behavior: "smooth",
+							block: "start",
+						});
+					}
+				});
+			});
+
+			// Scroll-triggered animations
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							entry.target.style.opacity = "1";
+							entry.target.style.transform = "translateY(0)";
+						}
+					});
+				},
+				{ threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+			);
+
+			document
+				.querySelectorAll(
+					".feature-item, .overview-card, .gallery-item, .service-card, .pipeline-step, .phase"
+				)
+				.forEach((el) => {
+					el.style.opacity = "0";
+					el.style.transform = "translateY(30px)";
+					el.style.transition =
+						"opacity 0.6s ease, transform 0.6s ease";
+					observer.observe(el);
+				});
+
+			// Active navigation link
+			window.addEventListener("scroll", () => {
+				const sections = document.querySelectorAll("section[id]");
+				const scrollPos = window.scrollY + 120;
+				sections.forEach((section) => {
+					const top = section.offsetTop;
+					const height = section.offsetHeight;
+					const id = section.getAttribute("id");
+					const navLink = document.querySelector(`a[href="#${id}"]`);
+					if (scrollPos >= top && scrollPos < top + height) {
+						document
+							.querySelectorAll(".nav-link")
+							.forEach((link) => link.classList.remove("active"));
+						if (navLink) navLink.classList.add("active");
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
