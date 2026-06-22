@@ -29,7 +29,6 @@
 					<li>
 						<a href="#technology" class="nav-link">Technology</a>
 					</li>
-					<li><a href="#roadmap" class="nav-link">Roadmap</a></li>
 					<li>
 						<a href="../../index.html" class="nav-link"
 							>Back to Portfolio</a
@@ -689,120 +688,6 @@
 							<span class="tech-tag">OpenTelemetry</span>
 							<span class="tech-tag">Micrometer</span>
 						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Roadmap Section -->
-		<section id="roadmap" class="roadmap">
-			<div class="container">
-				<h2 class="section-title no-sub">Phased Build Plan</h2>
-				<p class="section-subtitle">
-					Praman is built in dependency-ordered phases, each with a
-					clear "done when" exit criterion. The distributed-systems
-					core (phases 3–5) carries the most weight.
-				</p>
-				<div class="roadmap-timeline">
-					<div class="phase done">
-						<div class="phase-head">
-							<h4>Phase 1 — Foundations &amp; Identity</h4>
-							<span class="status-badge status-done">Complete</span>
-						</div>
-						<p>
-							Config Server, Eureka, PostgreSQL + MinIO, and a
-							Keycloak realm. The Gateway validates JWTs via JWKS and
-							injects <code>X-Tenant-Id</code> downstream — a token
-							reaches a protected endpoint, invalid tokens are
-							rejected.
-						</p>
-					</div>
-					<div class="phase current">
-						<div class="phase-head">
-							<h4>Phase 2 — Session Service &amp; Hosted Upload</h4>
-							<span class="status-badge status-current"
-								>In Progress</span
-							>
-						</div>
-						<p>
-							Session creation, hosted verification URL + QR + upload
-							token, file streaming to MinIO, and idempotency-key
-							handling.
-						</p>
-					</div>
-					<div class="phase">
-						<div class="phase-head">
-							<h4>Phase 3 — Kafka Pipeline Skeleton</h4>
-							<span class="status-badge status-planned"
-								>Planned</span
-							>
-						</div>
-						<p>
-							Prove the event-driven flow end to end with stubbed
-							processing, driven entirely by Kafka events.
-						</p>
-					</div>
-					<div class="phase">
-						<div class="phase-head">
-							<h4>Phase 4 — Python Workers (Real OCR)</h4>
-							<span class="status-badge status-planned"
-								>Planned</span
-							>
-						</div>
-						<p>
-							Replace stubs with real PaddleOCR extraction and a
-							clean face/liveness interface, plus health/metrics
-							sidecars.
-						</p>
-					</div>
-					<div class="phase">
-						<div class="phase-head">
-							<h4>Phase 5 — Decision Engine &amp; Webhooks</h4>
-							<span class="status-badge status-planned"
-								>Planned</span
-							>
-						</div>
-						<p>
-							Turn collected results into a real verdict and deliver
-							it reliably via signed, retried webhooks.
-						</p>
-					</div>
-					<div class="phase">
-						<div class="phase-head">
-							<h4>Phase 6 — Observability</h4>
-							<span class="status-badge status-planned"
-								>Planned</span
-							>
-						</div>
-						<p>
-							Metrics, structured logs to Loki, and end-to-end
-							tracing across services and Kafka into Tempo.
-						</p>
-					</div>
-					<div class="phase">
-						<div class="phase-head">
-							<h4>Phase 7 — Frontends</h4>
-							<span class="status-badge status-planned"
-								>Planned</span
-							>
-						</div>
-						<p>
-							The authenticated tenant dashboard and the mobile-first
-							hosted verification flow.
-						</p>
-					</div>
-					<div class="phase">
-						<div class="phase-head">
-							<h4>Phase 8 — Hardening</h4>
-							<span class="status-badge status-planned"
-								>Planned</span
-							>
-						</div>
-						<p>
-							Row-Level Security, PII column encryption, method-level
-							RBAC, rate limiting, and a single reproducible
-							docker-compose.
-						</p>
 					</div>
 				</div>
 			</div>
