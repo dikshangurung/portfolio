@@ -190,6 +190,120 @@
 	margin-top: var(--space-xs);
 }
 
+/* Client Projects Section */
+.client-projects {
+	margin-top: var(--space-xxl);
+}
+
+.client-projects .client-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 2rem;
+	margin-top: 2rem;
+}
+
+.client-projects .client-card {
+	display: flex;
+	flex-direction: column;
+	background: var(--bg-secondary, #ffffff);
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+	border: 1px solid var(--border-color, #e5e7eb);
+	text-decoration: none;
+	color: inherit;
+	transition: all var(--transition-smooth);
+}
+
+.client-projects .client-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 12px 25px rgba(26, 179, 148, 0.15);
+	border-color: var(--brand-green);
+}
+
+/* Logos are square marks, so contain them instead of cropping */
+.client-logo-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 160px;
+	padding: var(--space-lg);
+	background: var(--soft-white);
+	border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.client-logo {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	object-fit: contain;
+	transition: transform var(--transition-smooth);
+}
+
+.client-projects .client-card:hover .client-logo {
+	transform: scale(1.05);
+}
+
+.client-projects .card-content-simple {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	padding: 1.5rem;
+}
+
+.client-projects .card-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--text-primary, #1f2937);
+	margin-bottom: 0.5rem;
+	line-height: 1.3;
+}
+
+.client-projects .card-description-simple {
+	color: var(--text-secondary, #6b7280);
+	font-size: 0.95rem;
+	line-height: 1.5;
+	margin-bottom: 1rem;
+}
+
+.client-projects .tech-stack {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 1.25rem;
+}
+
+.client-projects .tech-tag {
+	background: var(--accent-bg, #f3f4f6);
+	color: var(--accent-text, #374151);
+	padding: 0.25rem 0.75rem;
+	border-radius: 20px;
+	font-size: 0.8rem;
+	font-weight: 500;
+	border: 1px solid var(--accent-border, #d1d5db);
+}
+
+.client-projects .card-link-container {
+	margin-top: auto;
+}
+
+.client-projects .card-link {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.6rem 1.2rem;
+	background: var(--brand-green);
+	color: white;
+	text-decoration: none;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	font-weight: 500;
+	transition: all 0.2s ease;
+}
+
+.client-projects .client-card:hover .card-link {
+	background: var(--brand-green-hover);
+}
+
 /* Other Projects Section */
 .other-projects {
 	margin-top: var(--space-xxl);
